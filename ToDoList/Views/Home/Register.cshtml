@@ -1,0 +1,27 @@
+﻿@model ToDoList.Models.RegisterViewModel
+
+<h2>Register</h2>
+
+<form asp-action="Register" method="post">
+    <!-- Anti-forgery token for security -->
+    @Html.AntiForgeryToken()
+
+    <div>
+        <label asp-for="Username">Username:</label>
+        <input asp-for="Username" class="form-control" required />
+        <!-- Display validation errors for the Username field -->
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="Password">Password:</label>
+        <input asp-for="Password" type="password" class="form-control" required />
+        <!-- Display validation errors for the Password field -->
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
+
+<!-- Validation summary -->
+<div asp-validation-summary="All" class="text-danger"></div>

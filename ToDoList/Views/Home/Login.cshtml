@@ -1,0 +1,13 @@
+﻿@model ToDoList.Models.LoginViewModel
+
+<form asp-action="Login" method="post">
+    <div>
+        <label for="username">Username</label>
+        <input type="text" name="Username" id="username" asp-for="Username" required />
+    </div>
+    <div>
+        <label for="password">Password</label>
+        <input type="password" name="Password" id="password" asp-for="Password" required />
+    </div>
+    <button type="submit">Login</button>
+</form>

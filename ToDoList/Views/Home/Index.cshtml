@@ -1,0 +1,188 @@
+﻿@using ToDoList.Domain
+@model ToDoList.Models.DashboardViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .dashboard-title {
+            color: #007bff;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .dashboard-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .task-item {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .task-item h3 {
+                margin: 0 0 10px;
+                color: #333;
+            }
+
+            .task-item p {
+                margin: 0;
+                color: #666;
+            }
+
+            .task-item .btn {
+                padding: 8px 16px;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                transition: background-color 0.3s;
+            }
+
+                .task-item .btn:hover {
+                    background-color: #0056b3;
+                }
+
+        .empty-message {
+            text-align: center;
+            color: #777;
+        }
+
+        .add-task-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+            .add-task-section form input[type="text"],
+            .add-task-section form input[type="date"] {
+                width: calc(100% - 120px);
+                padding: 10px;
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                outline: none;
+            }
+
+            .add-task-section form button {
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #28a745;
+                color: #fff;
+                border: none;
+                transition: background-color 0.3s;
+            }
+
+                .add-task-section form button:hover {
+                    background-color: #218838;
+                }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="dashboard-title">Dashboard</h1>
+
+        <!-- Welcome and Overview Section -->
+        <div class="dashboard-section">
+            <div class="section-title">Welcome, @Model.Username!</div>
+            <div class="section-content">
+                <p>You have <strong>@Model.PendingCount</strong> pending tasks and <strong>@Model.DoneCount</strong> completed tasks.</p>
+            </div>
+        </div>
+
+        <!-- Pending Tasks Section -->
+        <div class="dashboard-section">
+            <div class="section-title">Pending Tasks</div>
+            <div class="section-content">
+                @if (Model.PendingToDoItems != null && Model.PendingToDoItems.Any())
+                {
+                    foreach (var item in Model.PendingToDoItems)
+                    {
+                        <div class="task-item">
+                            <h3>@item.Title</h3>
+                            <p><strong>Due:</strong> @item.DueDate.ToString("MM/dd/yyyy")</p>
+                            <p>@item.Description</p>
+                            <form asp-action="MarkDone" method="post">
+                                <input type="hidden" name="Id" value="@item.Id" />
+                                <button type="submit" class="btn">Mark as Done <i class="fas fa-check"></i></button>
+                            </form>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="empty-message">No pending tasks available.</p>
+                }
+            </div>
+        </div>
+
+        <!-- Completed Tasks Section -->
+        <div class="dashboard-section">
+            <div class="section-title">Completed Tasks</div>
+            <div class="section-content">
+                @if (Model.DoneToDoItems != null && Model.DoneToDoItems.Any())
+                {
+                    foreach (var item in Model.DoneToDoItems)
+                    {
+                        <div class="task-item">
+                            <h3>@item.Title</h3>
+                            <p><strong>Completed on:</strong> @item.CompletedDate?.ToString("MM/dd/yyyy")</p>
+                            <p>@item.Description</p>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="empty-message">No completed tasks available.</p>
+                }
+            </div>
+        </div>
+
+        <!-- Add New Task Section -->
+        <div class="add-task-section">
+            <div class="section-title">Add New Task</div>
+            <div class="section-content">
+                <form asp-action="Add" method="post">
+                    <input type="text" name="Title" placeholder="Title" required />
+                    <input type="text" name="Description" placeholder="Description" required />
+                    <input type="date" name="DueDate" required />
+                    <button type="submit">Add Task <i class="fas fa-plus"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
